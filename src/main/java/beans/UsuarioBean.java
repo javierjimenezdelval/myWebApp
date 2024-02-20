@@ -14,7 +14,7 @@ import org.example.Direccion;
  */
 public class UsuarioBean {
     private String dni;
-    private String nombre;
+    private String demoName;
     private String ape1;
     private String ape2;
 
