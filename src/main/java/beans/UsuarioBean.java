@@ -14,7 +14,7 @@ import org.example.Direccion;
  */
 public class UsuarioBean {
     private String dni;
-    private String demoName;
+    private String nombre;
     private String ape1;
     private String ape2;
 
@@ -64,6 +64,7 @@ public class UsuarioBean {
 
 
     public void setDni(String dni) {
+        System.out.println("DNI PRUEBA"+dni);
         this.dni = dni;
     }
 

@@ -17,6 +17,9 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.validator.AbstractValidator;
 import com.vaadin.flow.router.Route;
 import daos.CentroDao;
 import daos.ServiciosDao;
@@ -34,6 +37,8 @@ public class MainView extends HorizontalLayout {
     antes de poder usarlo en el evento click
      */
     private H1 cartel = new H1("PRACTICANDO CON VAADIN");
+    private H1 cartel2 = new H1("Prueba Javi");
+
     private Button nuevo = new Button("Nuevo");
     private Button ok = new Button("Aceptar");
     private Button cancel = new Button("Cancelar");
@@ -61,12 +66,12 @@ para trabajar con esto hemos definido valores en el código (en UsuarioDao.java)
     public MainView() {
 
         ok.setEnabled(false);
-        ConfiguraCampos configuraCampos=new ConfiguraCampos();
+        ConfiguraCampos configuraCampos = new ConfiguraCampos();
         /* por defecto desactivado, hasta que haya algo en los campos */
-nombre=configuraCampos.configuraNombre(nombre);
-        nombre.addValueChangeListener(event->{
-        nombre=configuraCampos.configuraNombre(nombre);
-                
+        nombre = configuraCampos.configuraNombre(nombre);
+        nombre.addValueChangeListener(event -> {
+            nombre = configuraCampos.configuraNombre(nombre);
+
         });
         tipoVia.setAllowCustomValue(true);
         tipoVia.setItems("Calle", "Paseo", "Plaza", "Ctra.", "Parque");
@@ -138,11 +143,11 @@ nombre=configuraCampos.configuraNombre(nombre);
                 .setResizable(true);
         userGrid.setItems(lista);
 
-        VerticalLayout verticalGLOBAL = new VerticalLayout();
         HorizontalLayout horizontalUsuario = new HorizontalLayout();
         HorizontalLayout horizontalDomicilio = new HorizontalLayout();
         HorizontalLayout horizontalCentro = new HorizontalLayout();
         HorizontalLayout horizontalBotones = new HorizontalLayout();
+        VerticalLayout verticalGLOBAL = new VerticalLayout();
 
         verticalGLOBAL.add("Usuario");
 
@@ -151,6 +156,12 @@ nombre=configuraCampos.configuraNombre(nombre);
         dni.setClearButtonVisible(true);
         dni.setMinLength(9);
         dni.setMaxLength(9);
+        dni.addValueChangeListener(event -> {
+            String value = event.getValue();
+            ValidationResult validationResult = new DniValidator("Formato de DNI Invalido").apply(value, new ValueContext(dni));
+            dni.setInvalid(validationResult.isError());
+            dni.setErrorMessage(validationResult.getErrorMessage());
+        });
 
         comboCentro.setItems(new CentroDao().getLista());
         comboCentro.setItemLabelGenerator(CentrosBean::getDescripcion);
@@ -177,7 +188,10 @@ nombre=configuraCampos.configuraNombre(nombre);
         horizontalBotones.add(nuevo);
         horizontalBotones.add(ok);
         horizontalBotones.add(cancel);
+
         verticalGLOBAL.add(cartel);
+        verticalGLOBAL.add(cartel2);
+
         verticalGLOBAL.add(horizontalUsuario);
         verticalGLOBAL.add(horizontalDomicilio);
         verticalGLOBAL.add(horizontalCentro);
